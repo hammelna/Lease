@@ -24,7 +24,7 @@ namespace Lease.Api.DataAccess.Repositories
             return result.Entity;
         }
 
-        public async Task CreateLeaess(IEnumerable<LeaseModel> leases)
+        public async Task CreateLeases(IEnumerable<LeaseModel> leases)
         {
             await _context.AddRangeAsync(leases);
             await _context.SaveChangesAsync();

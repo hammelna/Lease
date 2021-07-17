@@ -9,6 +9,5 @@ namespace Lease.Api.Services
     {
         IEnumerable<MonthlyPaymentModel> MonthlyPaymentScheduleForLease(LeaseModel lease);
         Task<IEnumerable<MonthlyPaymentModel>> MonthlyPaymentScheduleInDateRange(DateTime start, DateTime end);
-        Task<IEnumerable<MonthlyPaymentModel>> MonthlyPaymentScheduleInDateRangeByMonthAndYearDictionaryAggregated(DateTime start, DateTime end);
     }
 }
