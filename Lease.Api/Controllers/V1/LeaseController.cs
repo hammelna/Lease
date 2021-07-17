@@ -7,7 +7,7 @@ using Lease.Api.DataAccess.Repositories;
 namespace Service.Lease.Api.Controllers.V1
 {
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class LeaseController : ControllerBase
     {

@@ -1,16 +1,11 @@
-﻿using Lease.Api.Models;
-using Lease.Api.Services;
-using Microsoft.AspNetCore.Http;
+﻿using Lease.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Lease.Api.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/lease/[controller]")]
     [ApiController]
     public class DownloadController : ControllerBase
     {
@@ -20,38 +15,19 @@ namespace Lease.Api.Controllers.V1
             _downloadService = downloadService;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult<IFormFile>> GetMonthlyPaymentsExport()
-        //{
-        //    IFormFile download = await _downloadService.DownloadMonthlyPayments();
-
-        //    File file = 
-
-        //    return Ok(download);
-        //}
-
         [HttpGet]
-        public async Task<IActionResult> DownloadPayments(string startDate, string endDate)
+        public async Task<IActionResult> DownloadPayments(DateTime startDate, DateTime endDate)
         {
-            bool isValidDate = DateTime.TryParse(startDate, out var start);
-            if (!isValidDate)
-            {
-                return BadRequest("Invalid Start Date");
-            }
-
-            isValidDate = DateTime.TryParse(endDate, out var end);
-            if (!isValidDate)
-            {
-                return BadRequest("Invalid End Date");
-            }
-
-            if(start > end)
+            if(startDate > endDate)
             {
                 return BadRequest("End date cannot be before start date.");
             }
 
-            var monthlyLeasePayment = await _downloadService.DownloadMonthlyPayments(start, end);
-            return File(monthlyLeasePayment, "text/csv", "DownloadExample.csv");
+            var monthlyLeasePayment = await _downloadService.DownloadMonthlyPayments(startDate, endDate);
+
+            string filename = $"PaymentSchedule_{startDate.ToString("MM-dd-yyyy")}_{endDate.ToString("MM-dd-yyyy")}.csv";
+
+            return File(monthlyLeasePayment, "text/csv", filename);
         }
     }
 }
