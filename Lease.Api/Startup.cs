@@ -22,6 +22,13 @@ namespace Lease.Api
         {
             services.AddControllers();
 
+            services.AddCors(cors => cors.AddDefaultPolicy(builder =>
+                builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials()
+                    .WithExposedHeaders("content-disposition")));
+
             services.AddDbContext<LeaseContext>(options => options.UseSqlServer(_configuration.GetConnectionString("LeaseContext")));
 
             services.AddSwaggerGen(config =>
@@ -53,6 +60,7 @@ namespace Lease.Api
             app.UseSwagger()
                 .UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Lease.Api V1"));
 
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseRouting();
 
