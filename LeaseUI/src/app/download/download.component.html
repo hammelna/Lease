@@ -1,0 +1,10 @@
+<form [formGroup]="datesForm">
+    <label for="start-date">Start Date</label>
+    <input name="start-date" type="date" formControlName="startDate">
+    <label for="end-date">End Date: </label>
+    <input name="end-date" type="date" formControlName="endDate">
+    <button (click)="downloadLeases()">Download Leases</button>
+</form>
+
+<p>StartDate: {{ datesForm.get('startDate').value }}</p>
+<p>EndDate: {{ datesForm.get('endDate').value }}</p>
