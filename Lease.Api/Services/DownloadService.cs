@@ -41,7 +41,7 @@ namespace Lease.Api.Services
         {
             foreach(var mp in monthlyPayments)
             {
-                var entry = $"{mp.Year},{mp.FullMonth},{mp.PaymentAmount},{mp.InterestPaymentAmount},{mp.TotalMonthlyPayment}";
+                var entry = $"{mp.Year},{mp.FullMonth},{mp.PaymentAmount.ToString("F")},{mp.InterestPaymentAmount.ToString("F")},{mp.TotalMonthlyPayment.ToString("F")}";
                 await writer.WriteLineAsync(entry);
             }
         }

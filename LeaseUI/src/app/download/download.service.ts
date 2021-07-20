@@ -1,43 +1,30 @@
-import { Injectable } from "@angular/core";
 import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { map } from 'rxjs/operators';
 import { environment } from "src/environments/environment";
-import { map, tap } from 'rxjs/operators';
-
-export interface FileBlob {
-    fileName: string;
-    file: Blob;
-}
+import { FileInformation } from "./file-info.model";
 
 @Injectable()
 export class DownloadService {
 
     constructor(private http: HttpClient) { }
 
-    public downloadLeases(startDate: Date, endDate: Date): Observable<FileBlob> {
+    public downloadLeases(startDate: Date, endDate: Date): Observable<FileInformation> {
         
         const url = environment.Urls.DownloadUrl;
-        const utcStartDate = startDate.toUTCString();
-        const utcEndDate = endDate.toUTCString();
-        console.log(`In Service, UTC Dates, Start: ${utcStartDate}, End: ${utcEndDate}`);
         const response = this.http.get(url, { 
             params: { 
-                startDate: utcStartDate, //.toLocaleDateString('en-US'), 
-                endDate: utcEndDate//.toLocaleDateString('en-US')
+                startDate: startDate.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}), 
+                endDate: endDate.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'})
             },
             responseType: 'blob',
             observe: 'response'
         }).pipe(
-            tap((resp: HttpResponse<Blob>) => {
-                console.log(`Header for Content Disposition: ${resp.headers.get('content-disposition')}. `, resp.headers);
-            }),
             map((resp: HttpResponse<Blob>) => {
                 const contentDisposition = resp.headers.get('content-disposition');
                 const fileName = contentDisposition.split(';')[1].trim().replace('filename=', '');
-                return {
-                    file: resp.body,
-                    fileName
-                }
+                return { file: resp.body, fileName }
             })
         );
         return response;

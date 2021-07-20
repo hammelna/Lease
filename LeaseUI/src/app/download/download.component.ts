@@ -1,38 +1,48 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
-import { first, tap } from "rxjs/operators";
-import { DownloadService, FileBlob } from "./download.service";
+import { first } from "rxjs/operators";
+import { DownloadService } from "./download.service";
+import { FileInformation } from "./file-info.model";
 
 @Component({
     selector: 'lsc-download-leases',
     templateUrl: './download.component.html',
     styleUrls: ['./download.component.scss']
 })
-export class DownloadComponent {
+export class DownloadComponent implements OnInit {
 
-    datesForm: FormGroup = new FormGroup ({
-        startDate: new FormControl(), 
-        endDate: new FormControl()
-    });
+    paymentsDateRange: FormGroup;
     
     constructor(private downloadService: DownloadService) { }
 
-    downloadLeases(): void {
-        console.log('Hit download leases');
-        const startDate = new Date(this.datesForm.get('startDate').value);
-        const endDate = new Date(this.datesForm.get('endDate').value);
-        console.log(`StartDate: ${startDate}, EndDate: ${endDate}`);
-        console.log(`Form StartDate: ${this.datesForm.get('startDate').value}, Form EndDate: ${this.datesForm.get('endDate').value}`);
-        this.downloadService.downloadLeases(startDate, endDate).pipe(
-            first(),
-            tap((resp) => console.log('Response in component: ', resp))
-        ).subscribe((fileInfo: FileBlob) => {
-              const a = document.createElement('a')
-              const objectUrl = URL.createObjectURL(fileInfo.file)
-              a.href = objectUrl
-              a.download = fileInfo.fileName;
-              a.click();
-              URL.revokeObjectURL(objectUrl);
+    ngOnInit() {
+        this.paymentsDateRange = new FormGroup({
+            start: new FormControl(new Date(2021, 0, 1)),
+            end: new FormControl(new Date(2022, 0, 1))
         });
+    }
+
+
+    downloadLeases(): void {
+        this.downloadService.downloadLeases(this.startDate, this.endDate)
+            .pipe(first())
+            .subscribe((fileInfo: FileInformation) => this.invokeDownload(fileInfo));
+    }
+
+    private get startDate(): Date {
+        return this.paymentsDateRange.get('start')?.value ?? new Date();
+    }
+
+    private get endDate(): Date {
+        return this.paymentsDateRange.get('end')?.value ?? new Date();
+    }
+
+    private invokeDownload(fileInfo: FileInformation): void {
+        const a = document.createElement('a')
+        const objectUrl = URL.createObjectURL(fileInfo.file)
+        a.href = objectUrl
+        a.download = fileInfo.fileName;
+        a.click();
+        URL.revokeObjectURL(objectUrl);
     }
 }

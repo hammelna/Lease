@@ -8,8 +8,8 @@ const routes: Routes = [
   { path: 'lease', component: LeaseListComponent },
   { path: 'upload', component: UploadComponent },
   { path: 'download', component: DownloadComponent },
-  { path: '', component: LeaseListComponent },
-  { path: '**', component: LeaseListComponent },
+  { path: '', redirectTo: 'lease', pathMatch: 'full' },
+  { path: '**', redirectTo: 'lease', pathMatch: 'full' },
 ];
 
 @NgModule({

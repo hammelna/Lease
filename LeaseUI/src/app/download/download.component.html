@@ -1,10 +1,25 @@
-<form [formGroup]="datesForm">
-    <label for="start-date">Start Date</label>
-    <input name="start-date" type="date" formControlName="startDate">
-    <label for="end-date">End Date: </label>
-    <input name="end-date" type="date" formControlName="endDate">
-    <button (click)="downloadLeases()">Download Leases</button>
-</form>
-
-<p>StartDate: {{ datesForm.get('startDate').value }}</p>
-<p>EndDate: {{ datesForm.get('endDate').value }}</p>
+<div class="download-content">
+  
+  <mat-form-field class="form-field" appearance="fill">
+    
+    <mat-label>Monthly Payment Download Range:</mat-label>
+    <mat-date-range-input
+      [formGroup]="paymentsDateRange"
+      [rangePicker]="paymentRange"
+      [comparisonStart]="paymentsDateRange.value.start"
+      [comparisonEnd]="paymentsDateRange.value.end">
+      <input matStartDate placeholder="Start date" formControlName="start">
+      <input matEndDate placeholder="End date" formControlName="end">
+    </mat-date-range-input>
+    <mat-datepicker-toggle matSuffix [for]="paymentRange"></mat-datepicker-toggle>
+    <mat-date-range-picker #paymentRange></mat-date-range-picker>
+    
+  </mat-form-field>
+  
+  <button mat-raised-button color="primary" (click)="downloadLeases()">
+    <div class="button-flex">
+      <mat-icon class="icon-margin">cloud_download</mat-icon>
+      <span>Download Leases</span>
+    </div>
+  </button>
+</div>
