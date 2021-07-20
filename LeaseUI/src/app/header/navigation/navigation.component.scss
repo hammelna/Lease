@@ -1,0 +1,14 @@
+.nav-flex {
+  display: flex;
+  justify-content: center;
+  margin: 12px auto;
+
+  a {
+    margin: 12px;
+    text-decoration: none;
+    
+    &.active-route {
+      border-bottom: 3px solid #673ab7;
+    }
+  }
+}

@@ -1,1 +1,17 @@
-<h3>Upload Component Goes Here</h3>
+<div class="upload-content">
+    <input #fileUpload type="file" 
+        class="file-input"
+        (change)="onFileSelected($event)">
+
+    <span class="file-name">{{ fileName || "No file uploaded yet" }}</span>
+    
+    <button mat-raised-button
+        color="primary" 
+        class="upload-btn"
+        (click)="fileUpload.click()">
+        <div class="button-flex">
+            <mat-icon class="icon-margin">cloud_upload</mat-icon>
+            <span>Upload File</span>
+        </div>
+    </button>
+</div>
